@@ -18,7 +18,7 @@ const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
     (group) => group?.[0]?.id === selectedLaunchGroup?.id
   );
 
-  // if (!launchGroup) return null;
+  if (!launchGroup) return null;
 
   return (
     <>
