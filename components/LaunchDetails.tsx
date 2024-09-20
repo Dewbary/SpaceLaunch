@@ -25,7 +25,7 @@ const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen((prevState) => !prevState)}
-          className="rounded-md absolute top-10 right-10"
+          className="rounded-md absolute top-20 right-16"
           variant="outline"
         >
           Show Launch Data
@@ -33,7 +33,8 @@ const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
       )}
       <aside
         className={cn(
-          "w-96"
+          "fixed top-20 right-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300",
+          isOpen === false ? "w-0" : "w-96"
           // "fixed top-0 right-0 z-20 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300",
           // isOpen === false ? "w-0" : "w-2/6"
 

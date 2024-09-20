@@ -13,10 +13,10 @@ export const useContainerSize = () => {
     };
 
     updateSize();
-    window.addEventListener("resize", updateSize);
+    window?.addEventListener("resize", updateSize);
 
     return () => {
-      window.removeEventListener("resize", updateSize);
+      window?.removeEventListener("resize", updateSize);
     };
   }, []);
 

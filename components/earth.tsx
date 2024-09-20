@@ -60,13 +60,16 @@ const Earth = ({ launchGroups, onSelectGroup }: Props) => {
     onSelectGroup(group as LaunchGroup);
   };
 
+  if (!window) return null;
   return (
     <div ref={containerRef} className="flex-1 min-w-0">
       <Globe
         ref={globeEl}
         width={size.width}
         height={size.height}
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+        // globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
         labelsData={launchGroups}
         labelText={"info"}
         labelSize={1}

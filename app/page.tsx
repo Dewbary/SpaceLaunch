@@ -9,6 +9,7 @@ import { Launch, LaunchGroup } from "@/utils/types";
 import { calculateLaunchGroups } from "@/utils/launchUtils";
 import LaunchFilters from "@/components/LaunchFilters";
 import LaunchDetails from "@/components/LaunchDetails";
+import { NavigationMenuDemo } from "@/components/ui/navMenu";
 
 const supabase = getClient();
 
@@ -150,25 +151,26 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen">
-      <Earth launchGroups={launchGroups} onSelectGroup={handleSelectGroup} />
-      <div className="w-96 bg-slate-500">
+    <div className="flex flex-col h-screen">
+      <NavigationMenuDemo />
+      <div className="flex h-full">
+        <Earth launchGroups={launchGroups} onSelectGroup={handleSelectGroup} />
         <LaunchDetails
           selectedLaunchGroup={selectedGroup}
           launchGroups={groups}
         />
-      </div>
-      <div className="absolute bottom-10 left-10 z-10">
-        <LaunchFilters
-          toggleShowPastWeekLaunches={togglePastWeekLaunches}
-          toggleShowLaunchesThisYear={toggleThisYearLaunches}
-          toggleShowUpcomingLaunches={() => {}}
-          toggleDateRange={toggleDateRange}
-          onSelectDateRange={(dateRange) => setDateRange(dateRange)}
-        />
-      </div>
-      <div className="absolute top-10 left-10">
-        <ModeToggle />
+        <div className="absolute bottom-10 left-10 z-10">
+          <LaunchFilters
+            toggleShowPastWeekLaunches={togglePastWeekLaunches}
+            toggleShowLaunchesThisYear={toggleThisYearLaunches}
+            toggleShowUpcomingLaunches={() => {}}
+            toggleDateRange={toggleDateRange}
+            onSelectDateRange={(dateRange) => setDateRange(dateRange)}
+          />
+        </div>
+        <div className="absolute top-20 left-16">
+          <ModeToggle />
+        </div>
       </div>
     </div>
   );
