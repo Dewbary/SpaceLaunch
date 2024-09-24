@@ -1,10 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { DatePickerWithRange } from "./ui/datePickerWithRange";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
@@ -26,30 +19,21 @@ const LaunchFilters = ({
   onSelectDateRange,
 }: Props) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Launch Filters</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col">
-        <div>
-          <Checkbox onClick={() => toggleShowPastWeekLaunches()} />
-          <Label>Past Week</Label>
-        </div>
-        <div>
-          <Checkbox onClick={() => toggleShowLaunchesThisYear()} />
-          <Label>This Year</Label>
-        </div>
-        <div>
-          <Checkbox onClick={() => toggleShowUpcomingLaunches()} />
-          <Label>Upcoming</Label>
-        </div>
-        <div className="flex">
-          <Checkbox onClick={() => toggleDateRange()} />
-          <DatePickerWithRange onClose={onSelectDateRange} />
-        </div>
-      </CardContent>
-    </Card>
+    <>
+      <DatePickerWithRange onClose={onSelectDateRange} />
+      <div className="flex gap-x-2 items-center">
+        <Checkbox onClick={toggleShowPastWeekLaunches} />
+        <Label>Past Week</Label>
+      </div>
+      <div className="flex gap-x-2 items-center">
+        <Checkbox onClick={toggleShowLaunchesThisYear} />
+        <Label>This Year</Label>
+      </div>
+      <div className="flex gap-x-2 items-center">
+        <Checkbox onClick={toggleShowUpcomingLaunches} />
+        <Label>Upcoming</Label>
+      </div>
+    </>
   );
 };
 

@@ -11,36 +11,16 @@ console.log("Hello from Functions!")
 const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!)
 
 Deno.serve(async (req) => {
-  while (true) {
-    try {
-      let lastNextUrlData
-      try {
-        const { data: urlData } = await supabase
-          .from('url_store')
-          .select('next_url')
-          .eq('id', 'last_url')
-          .single();
-        lastNextUrlData = urlData
-      } catch (error) { 
-        console.log("Error fetching last url", error)
-      }
-      console.log("lastNextUrlData", JSON.stringify(lastNextUrlData))
-      const fetchUrl = lastNextUrlData?.next_url ?? "https://ll.thespacedevs.com/2.2.0/launch/?limit=100&mode=detailed&ordering=-net&net__lt=2015-01-10"
-      const response = await fetch(fetchUrl);
-      const result = await response.json();
-      const launches = result.results
+  const yesterdayDateTime = new Date();
+  yesterdayDateTime.setDate(yesterdayDateTime.getDate() - 1);
+  const yesterdayDate = yesterdayDateTime.toISOString().split('T')[0]
 
-      for (const launch of launches) {
-        await supabase.from("launch").upsert({ id: launch.id, net: launch.net, last_updated: launch.last_updated, launchData: launch})
-      }
-      const { error } = await supabase.from('url_store').upsert({ id: 'last_url', next_url: result.next });
-      if (error) {
-        console.log('ERROR', error)
-      }
-    } catch (error) {
-      console.log("Error fetching launches", error, launches)
-      break;
-    }
+  const upcomingLaunchesResponse = await fetch(`https://ll.thespacedevs.com/2.2.0/launch/?limit=500&ordering=net&net__gt=${yesterdayDate}`)
+  const upcomingLaunchesResult = await upcomingLaunchesResponse.json()
+  const upcomingLaunches = upcomingLaunchesResult.results
+
+  for (const launch of upcomingLaunches) {
+    await supabase.from("launch").upsert({ id: launch.id, net: launch.net, last_updated: launch.last_updated, launchData: launch})
   }
 
   return new Response(

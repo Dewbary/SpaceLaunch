@@ -9,7 +9,7 @@ import { useContainerSize } from "@/hooks/useContainerSize";
 
 const loader = new GLTFLoader();
 
-const DEFAULT_POINT_OF_VIEW_ALTITUDE = 1.8;
+const DEFAULT_POINT_OF_VIEW_ALTITUDE = 2;
 const RENDER_FACTOR = 0.15;
 const TRANSITION_TIME_MS = 500;
 
@@ -66,7 +66,7 @@ const Earth = ({ launchGroups, onSelectGroup }: Props) => {
       <Globe
         ref={globeEl}
         width={size.width}
-        height={size.height}
+        height={size.height + 50}
         backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
         // globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"

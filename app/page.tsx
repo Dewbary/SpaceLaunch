@@ -9,7 +9,7 @@ import { Launch, LaunchGroup } from "@/utils/types";
 import { calculateLaunchGroups } from "@/utils/launchUtils";
 import LaunchFilters from "@/components/LaunchFilters";
 import LaunchDetails from "@/components/LaunchDetails";
-import { NavigationMenuDemo } from "@/components/ui/navMenu";
+import { Menu } from "@/components/ui/menu";
 
 const supabase = getClient();
 
@@ -152,14 +152,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen">
-      <NavigationMenuDemo />
       <div className="flex h-full">
-        <Earth launchGroups={launchGroups} onSelectGroup={handleSelectGroup} />
-        <LaunchDetails
-          selectedLaunchGroup={selectedGroup}
-          launchGroups={groups}
-        />
-        <div className="absolute bottom-10 left-10 z-10">
+        <Menu />
+        <div className="fixed flex top-12 left-8 z-10 gap-4">
           <LaunchFilters
             toggleShowPastWeekLaunches={togglePastWeekLaunches}
             toggleShowLaunchesThisYear={toggleThisYearLaunches}
@@ -168,7 +163,13 @@ export default function Home() {
             onSelectDateRange={(dateRange) => setDateRange(dateRange)}
           />
         </div>
-        <div className="absolute top-20 left-16">
+
+        <Earth launchGroups={launchGroups} onSelectGroup={handleSelectGroup} />
+        <LaunchDetails
+          selectedLaunchGroup={selectedGroup}
+          launchGroups={groups}
+        />
+        <div className="fixed bottom-12 left-8">
           <ModeToggle />
         </div>
       </div>
