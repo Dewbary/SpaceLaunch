@@ -1,8 +1,7 @@
 import { DateRange } from "react-day-picker";
-import { ComboboxDemo } from "./ui/combobox";
-import { PopoverDemo } from "./FilterPopover";
+// import { ComboboxDemo } from "./ui/combobox";
 import { DatePickerWithRange } from "./ui/datePickerWithRange";
-// import LaunchDateRangePicker from "./LaunchDateRangePicker";
+import { LaunchFiltersPopover } from "./FilterPopover";
 
 type Props = {
   onSelectDateRange: (date: DateRange | undefined) => void;
@@ -12,14 +11,8 @@ const LaunchFilters = ({ onSelectDateRange }: Props) => {
   return (
     <div className="fixed flex top-16 left-8 z-10 gap-2">
       {/* <ComboboxDemo /> */}
-      <PopoverDemo />
+      <LaunchFiltersPopover />
       <DatePickerWithRange onClose={onSelectDateRange} />
-      {/* <LaunchDateRangePicker
-        onSelectDateRange={onSelectDateRange}
-        toggleShowLaunchesThisYear={toggleShowLaunchesThisYear}
-        toggleShowPastWeekLaunches={toggleShowPastWeekLaunches}
-        toggleShowUpcomingLaunches={toggleShowUpcomingLaunches}
-      /> */}
     </div>
   );
 };

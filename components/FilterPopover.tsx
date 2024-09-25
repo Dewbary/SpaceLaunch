@@ -7,8 +7,36 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { FilterIcon } from "lucide-react";
+import { useState } from "react";
 
-export function PopoverDemo() {
+export function LaunchFiltersPopover() {
+  const [filters, setFilters] = useState({
+    country: "",
+    provider: "",
+    name: "",
+    status: {
+      failed: false,
+      succeeded: false,
+      scrubbed: false,
+    },
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // const handleStatusChange = (status: "failed" | "succeeded" | "scrubbed") => {
+  //   setFilters((prev) => ({
+  //     ...prev,
+  //     status: { ...prev.status, [status]: !prev.status[status] },
+  //   }));
+  // };
+
+  const handleApplyFilters = () => {
+    console.log("Applying filters:", filters);
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -19,45 +47,52 @@ export function PopoverDemo() {
       <PopoverContent align="start" className="w-80">
         <div className="grid gap-4">
           <div className="space-y-2">
-            <h4 className="font-medium leading-none">Dimensions</h4>
+            <h4 className="font-medium leading-none">Filters</h4>
             <p className="text-sm text-muted-foreground">
-              Set the dimensions for the layer.
+              Set the filters for rocket launch data.
             </p>
           </div>
           <div className="grid gap-2">
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="width">Width</Label>
+              <Label htmlFor="country">Country</Label>
               <Input
                 id="width"
-                defaultValue="100%"
+                placeholder="e.g. USA"
+                value={filters.country}
+                onChange={handleInputChange}
                 className="col-span-2 h-8"
               />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxWidth">Max. width</Label>
+              <Label htmlFor="maxWidth">Provider</Label>
               <Input
                 id="maxWidth"
-                defaultValue="300px"
+                placeholder="e.g. SpaceX"
+                value={filters.provider}
+                onChange={handleInputChange}
                 className="col-span-2 h-8"
               />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="height">Height</Label>
+              <Label htmlFor="height">Name</Label>
               <Input
                 id="height"
-                defaultValue="25px"
+                placeholder="e.g. Starlink"
+                value={filters.name}
+                onChange={handleInputChange}
                 className="col-span-2 h-8"
               />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxHeight">Max. height</Label>
+              <Label>Status</Label>
               <Input
                 id="maxHeight"
-                defaultValue="none"
+                placeholder="e.g. Success"
                 className="col-span-2 h-8"
               />
             </div>
           </div>
+          <Button onClick={handleApplyFilters}>Apply Filters</Button>
         </div>
       </PopoverContent>
     </Popover>
