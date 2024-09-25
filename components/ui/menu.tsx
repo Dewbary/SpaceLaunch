@@ -17,7 +17,7 @@ import {
 
 export function Menu() {
   return (
-    <Menubar className="fixed top-0 z-10 inset-x-0 rounded-none border-b border-none px-2 lg:px-4">
+    <Menubar className="fixed top-0 z-10 p-8 inset-x-0 rounded-none bg-black bg-opacity-75 border-b border-none px-2 lg:px-4">
       <MenubarMenu>
         <MenubarTrigger className="font-bold">SpaceLaunch</MenubarTrigger>
         <MenubarContent>

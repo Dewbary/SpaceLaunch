@@ -1,8 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import {
+  addDays,
+  startOfWeek,
+  endOfWeek,
+  startOfYear,
+  endOfYear,
+  format,
+} from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -22,10 +29,31 @@ export function DatePickerWithRange({
   className,
   onClose,
 }: React.HTMLAttributes<HTMLDivElement> & Props) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
+  const [date, setDate] = React.useState<DateRange | undefined>();
+
+  const setThisWeek = () => {
+    const now = new Date();
+    setDate({
+      from: startOfWeek(now),
+      to: endOfWeek(now),
+    });
+  };
+
+  const setThisYear = () => {
+    const now = new Date();
+    setDate({
+      from: startOfYear(now),
+      to: endOfYear(now),
+    });
+  };
+
+  const setUpcoming = () => {
+    const now = new Date();
+    setDate({
+      from: now,
+      to: addDays(now, 30),
+    });
+  };
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -60,14 +88,50 @@ export function DatePickerWithRange({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2}
-          />
+          <div className="flex">
+            <div className="w-36 border-r border-border/50 p-2 space-y-2 bg-muted/50">
+              <div className="px-3 py-2">
+                <h3 className="font-medium text-xs text-muted-foreground tracking-wider uppercase">
+                  Quick Select
+                </h3>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-left font-normal"
+                onClick={setThisWeek}
+              >
+                This Week
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-left font-normal"
+                onClick={setThisYear}
+              >
+                This Year
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-left font-normal"
+                onClick={setUpcoming}
+              >
+                Upcoming
+              </Button>
+            </div>
+            <div>
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={setDate}
+                numberOfMonths={2}
+                className="rounded-l-none"
+              />
+            </div>
+          </div>
         </PopoverContent>
       </Popover>
     </div>

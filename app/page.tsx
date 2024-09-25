@@ -14,9 +14,6 @@ import { Menu } from "@/components/ui/menu";
 const supabase = getClient();
 
 export default function Home() {
-  const [showPastWeekLaunches, setShowPastWeekLaunches] = React.useState(false);
-  const [showLaunchesThisYear, setShowLaunchesThisYear] = React.useState(false);
-  const [useDateRange, setUseDateRange] = React.useState(false);
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
   const [selectedGroup, setSelectedGroup] = React.useState<LaunchGroup | null>(
     null
@@ -31,7 +28,7 @@ export default function Home() {
         .limit(200);
       return launch;
     },
-    enabled: !showPastWeekLaunches && !showLaunchesThisYear,
+    enabled: true,
   });
 
   const { data: pastWeekLaunches } = useQuery({
@@ -44,7 +41,7 @@ export default function Home() {
         .gte("net", "2024-09-03");
       return launch;
     },
-    enabled: showPastWeekLaunches,
+    enabled: true,
   });
 
   const { data: thisYearLaunches } = useQuery({
@@ -57,7 +54,7 @@ export default function Home() {
         .gte("net", "2024-01-01");
       return launch;
     },
-    enabled: showLaunchesThisYear,
+    enabled: true,
   });
 
   const { data: dateRangeLaunches } = useQuery({
@@ -70,38 +67,30 @@ export default function Home() {
         .gte("net", dateRange?.from?.toISOString());
       return launch;
     },
-    enabled: useDateRange,
+    enabled: true,
   });
 
   const launchData = React.useMemo<Launch[]>(() => {
     let launches: Launch[] = [];
 
-    if (useDateRange && dateRangeLaunches) {
+    if (dateRangeLaunches) {
       return dateRangeLaunches;
     }
 
-    if (showPastWeekLaunches && pastWeekLaunches) {
+    if (pastWeekLaunches) {
       launches = [...pastWeekLaunches];
     }
 
-    if (showLaunchesThisYear && thisYearLaunches) {
+    if (thisYearLaunches) {
       launches = [...launches, ...thisYearLaunches];
     }
 
-    if (!showPastWeekLaunches && !showLaunchesThisYear && data) {
+    if (data) {
       launches = [...data];
     }
 
     return launches;
-  }, [
-    useDateRange,
-    dateRangeLaunches,
-    showPastWeekLaunches,
-    pastWeekLaunches,
-    showLaunchesThisYear,
-    thisYearLaunches,
-    data,
-  ]);
+  }, [data, dateRangeLaunches, pastWeekLaunches, thisYearLaunches]);
 
   const groups = React.useMemo(() => {
     // Grab the launch data object from each launch
@@ -130,22 +119,6 @@ export default function Home() {
     });
   }, [groups]);
 
-  const toggleDateRange = () => {
-    if (useDateRange) {
-      setUseDateRange(false);
-    } else {
-      setUseDateRange(true);
-      setShowLaunchesThisYear(false);
-      setShowPastWeekLaunches(false);
-    }
-  };
-
-  const togglePastWeekLaunches = () =>
-    setShowPastWeekLaunches((prevState) => !prevState);
-
-  const toggleThisYearLaunches = () =>
-    setShowLaunchesThisYear((prevState) => !prevState);
-
   const handleSelectGroup = (group: LaunchGroup) => {
     setSelectedGroup(group);
   };
@@ -154,15 +127,9 @@ export default function Home() {
     <div className="flex flex-col h-screen">
       <div className="flex h-full">
         <Menu />
-        <div className="fixed flex top-12 left-8 z-10 gap-4">
-          <LaunchFilters
-            toggleShowPastWeekLaunches={togglePastWeekLaunches}
-            toggleShowLaunchesThisYear={toggleThisYearLaunches}
-            toggleShowUpcomingLaunches={() => {}}
-            toggleDateRange={toggleDateRange}
-            onSelectDateRange={(dateRange) => setDateRange(dateRange)}
-          />
-        </div>
+        <LaunchFilters
+          onSelectDateRange={(dateRange) => setDateRange(dateRange)}
+        />
 
         <Earth launchGroups={launchGroups} onSelectGroup={handleSelectGroup} />
         <LaunchDetails

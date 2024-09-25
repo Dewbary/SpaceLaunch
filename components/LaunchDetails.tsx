@@ -40,7 +40,7 @@ const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
           </Button>
         )}
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="bg-black bg-opacity-75">
         <SheetHeader>
           <SheetTitle>Launch Details</SheetTitle>
           <SheetDescription>

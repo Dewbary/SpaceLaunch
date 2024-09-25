@@ -1,39 +1,26 @@
-import { DatePickerWithRange } from "./ui/datePickerWithRange";
-import { Checkbox } from "./ui/checkbox";
-import { Label } from "./ui/label";
 import { DateRange } from "react-day-picker";
+import { ComboboxDemo } from "./ui/combobox";
+import { PopoverDemo } from "./FilterPopover";
+import { DatePickerWithRange } from "./ui/datePickerWithRange";
+// import LaunchDateRangePicker from "./LaunchDateRangePicker";
 
 type Props = {
-  toggleShowPastWeekLaunches: () => void;
-  toggleShowLaunchesThisYear: () => void;
-  toggleShowUpcomingLaunches: () => void;
-  toggleDateRange: () => void;
   onSelectDateRange: (date: DateRange | undefined) => void;
 };
 
-const LaunchFilters = ({
-  toggleShowPastWeekLaunches,
-  toggleShowLaunchesThisYear,
-  toggleShowUpcomingLaunches,
-  toggleDateRange,
-  onSelectDateRange,
-}: Props) => {
+const LaunchFilters = ({ onSelectDateRange }: Props) => {
   return (
-    <>
+    <div className="fixed flex top-16 left-8 z-10 gap-2">
+      {/* <ComboboxDemo /> */}
+      <PopoverDemo />
       <DatePickerWithRange onClose={onSelectDateRange} />
-      <div className="flex gap-x-2 items-center">
-        <Checkbox onClick={toggleShowPastWeekLaunches} />
-        <Label>Past Week</Label>
-      </div>
-      <div className="flex gap-x-2 items-center">
-        <Checkbox onClick={toggleShowLaunchesThisYear} />
-        <Label>This Year</Label>
-      </div>
-      <div className="flex gap-x-2 items-center">
-        <Checkbox onClick={toggleShowUpcomingLaunches} />
-        <Label>Upcoming</Label>
-      </div>
-    </>
+      {/* <LaunchDateRangePicker
+        onSelectDateRange={onSelectDateRange}
+        toggleShowLaunchesThisYear={toggleShowLaunchesThisYear}
+        toggleShowPastWeekLaunches={toggleShowPastWeekLaunches}
+        toggleShowUpcomingLaunches={toggleShowUpcomingLaunches}
+      /> */}
+    </div>
   );
 };
 
