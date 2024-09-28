@@ -1,11 +1,16 @@
 "use client";
 
-import Globe, { GlobeMethods } from "react-globe.gl";
 import React from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { LaunchData, LaunchGroup } from "@/utils/types";
 import { useContainerSize } from "@/hooks/useContainerSize";
+import dynamic from "next/dynamic";
+import { GlobeMethods } from "react-globe.gl";
+
+const Globe = dynamic(() => import("react-globe.gl"), {
+  ssr: false,
+});
 
 const loader = new GLTFLoader();
 
@@ -61,7 +66,6 @@ const Earth = ({ launchGroups, onSelectGroup }: Props) => {
     onSelectGroup(group as LaunchGroup);
   };
 
-  if (!window) return null;
   return (
     <div ref={containerRef} className="flex-1 min-w-0">
       <Globe
