@@ -70,3 +70,9 @@ export type LaunchGroup = {
   groupSize: number;
   info: string;
 };
+
+export type LabelGroup = {
+  lat: number;
+  lng: number;
+  info: string;
+}

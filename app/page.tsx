@@ -5,60 +5,27 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { getClient } from "@/utils/supabase/client";
 import React from "react";
 import { DateRange } from "react-day-picker";
-import { Launch, LaunchGroup } from "@/utils/types";
+import { LabelGroup, Launch, LaunchGroup } from "@/utils/types";
 import { calculateLaunchGroups } from "@/utils/launchUtils";
 import LaunchFilters from "@/components/LaunchFilters";
 import LaunchDetails from "@/components/LaunchDetails";
 import { Menu } from "@/components/ui/menu";
+import { startOfToday, endOfWeek } from "date-fns";
 
 const supabase = getClient();
 
 export default function Home() {
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
+  const today = startOfToday();
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: today,
+    to: endOfWeek(today),
+  });
   const [selectedGroup, setSelectedGroup] = React.useState<LaunchGroup | null>(
     null
   );
 
   const { data } = useQuery({
-    queryKey: ["launchData"],
-    queryFn: async () => {
-      const { data: launch } = await supabase
-        .from("launch")
-        .select("*")
-        .limit(200);
-      return launch;
-    },
-    enabled: true,
-  });
-
-  const { data: pastWeekLaunches } = useQuery({
-    queryKey: ["weekData"],
-    queryFn: async () => {
-      const { data: launch } = await supabase
-        .from("launch")
-        .select("*")
-        .lte("net", "2024-09-10")
-        .gte("net", "2024-09-03");
-      return launch;
-    },
-    enabled: true,
-  });
-
-  const { data: thisYearLaunches } = useQuery({
-    queryKey: ["yearData"],
-    queryFn: async () => {
-      const { data: launch } = await supabase
-        .from("launch")
-        .select("*")
-        .lte("net", "2024-09-10")
-        .gte("net", "2024-01-01");
-      return launch;
-    },
-    enabled: true,
-  });
-
-  const { data: dateRangeLaunches } = useQuery({
-    queryKey: ["dateRangeData"],
+    queryKey: ["launchData", dateRange],
     queryFn: async () => {
       const { data: launch } = await supabase
         .from("launch")
@@ -73,24 +40,12 @@ export default function Home() {
   const launchData = React.useMemo<Launch[]>(() => {
     let launches: Launch[] = [];
 
-    if (dateRangeLaunches) {
-      return dateRangeLaunches;
-    }
-
-    if (pastWeekLaunches) {
-      launches = [...pastWeekLaunches];
-    }
-
-    if (thisYearLaunches) {
-      launches = [...launches, ...thisYearLaunches];
-    }
-
     if (data) {
       launches = [...data];
     }
 
     return launches;
-  }, [data, dateRangeLaunches, pastWeekLaunches, thisYearLaunches]);
+  }, [data]);
 
   const groups = React.useMemo(() => {
     // Grab the launch data object from each launch
@@ -100,12 +55,22 @@ export default function Home() {
     return calculateLaunchGroups(launchesData);
   }, [launchData]);
 
+  const labelGroups = React.useMemo<LabelGroup[]>(() => {
+    return groups.map((l) => {
+      const firstlaunchInGroup = l[0];
+      return {
+        lat: firstlaunchInGroup.pad.latitude,
+        lng: firstlaunchInGroup.pad.longitude,
+        info: l.length.toString(),
+      };
+    });
+  }, [groups]);
+
   const launchGroups = React.useMemo<LaunchGroup[]>(() => {
     // Offset the launches in each group
     // groups.forEach((group) => {
     //   offsetLaunches(group);
     // });
-
     return groups.map((l) => {
       const firstlaunchInGroup = l[0];
       return {
@@ -130,8 +95,11 @@ export default function Home() {
         <LaunchFilters
           onSelectDateRange={(dateRange) => setDateRange(dateRange)}
         />
-
-        <Earth launchGroups={launchGroups} onSelectGroup={handleSelectGroup} />
+        <Earth
+          launchGroups={launchGroups}
+          labelGroups={labelGroups}
+          onSelectGroup={handleSelectGroup}
+        />
         <LaunchDetails
           selectedLaunchGroup={selectedGroup}
           launchGroups={groups}

@@ -3,14 +3,9 @@
 import React from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { LaunchData, LaunchGroup } from "@/utils/types";
+import { LabelGroup, LaunchData, LaunchGroup } from "@/utils/types";
 import { useContainerSize } from "@/hooks/useContainerSize";
-import dynamic from "next/dynamic";
-import { GlobeMethods } from "react-globe.gl";
-
-const Globe = dynamic(() => import("react-globe.gl"), {
-  ssr: false,
-});
+import Globe, { GlobeMethods } from "react-globe.gl";
 
 const loader = new GLTFLoader();
 
@@ -20,15 +15,19 @@ const TRANSITION_TIME_MS = 500;
 
 type Props = {
   launchGroups: LaunchGroup[];
+  labelGroups: LabelGroup[];
   onSelectGroup: (group: LaunchGroup) => void;
 };
 
-const Earth = ({ launchGroups, onSelectGroup }: Props) => {
+const Earth = ({ launchGroups, labelGroups, onSelectGroup }: Props) => {
   const globeEl = React.useRef<GlobeMethods | undefined>(undefined);
 
   const { containerRef, size } = useContainerSize();
 
+  const [isMounted, setIsMounted] = React.useState(false);
+
   React.useEffect(() => {
+    setIsMounted(true);
     globeEl?.current?.pointOfView({ altitude: DEFAULT_POINT_OF_VIEW_ALTITUDE });
   }, []);
 
@@ -66,27 +65,31 @@ const Earth = ({ launchGroups, onSelectGroup }: Props) => {
     onSelectGroup(group as LaunchGroup);
   };
 
+  console.log("launchGroups", launchGroups);
+
   return (
     <div ref={containerRef} className="flex-1 min-w-0">
-      <Globe
-        ref={globeEl}
-        width={size.width}
-        height={size.height + 50}
-        backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-        // globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
-        labelsData={launchGroups}
-        labelText={"info"}
-        labelSize={1}
-        labelDotRadius={0.2}
-        labelColor={() => "rgba(255, 165, 0, 0.75)"}
-        objectsData={launchGroups}
-        objectLabel="label"
-        objectAltitude={0.04}
-        // @ts-expect-error - generic object type
-        objectThreeObject={(group) => getLaunchObject(group)}
-        onObjectClick={handleObjectClick}
-      />
+      {isMounted && (
+        <Globe
+          ref={globeEl}
+          width={size.width}
+          height={size.height + 50}
+          backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+          // globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+          labelsData={labelGroups}
+          labelText={"info"}
+          labelSize={1}
+          labelDotRadius={0.2}
+          labelColor={() => "rgba(255, 165, 0, 0.75)"}
+          objectsData={launchGroups}
+          objectLabel="label"
+          objectAltitude={0.04}
+          // @ts-expect-error - generic object type
+          objectThreeObject={(group) => getLaunchObject(group)}
+          onObjectClick={handleObjectClick}
+        />
+      )}
     </div>
   );
 };
