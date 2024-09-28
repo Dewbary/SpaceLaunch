@@ -27,6 +27,7 @@ const Earth = ({ launchGroups, onSelectGroup }: Props) => {
     globeEl?.current?.pointOfView({ altitude: DEFAULT_POINT_OF_VIEW_ALTITUDE });
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getLaunchObject = (launchGroup: LaunchData[]) => {
     const group = new THREE.Group();
 
