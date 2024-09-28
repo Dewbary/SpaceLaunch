@@ -1,6 +1,6 @@
 import type { LaunchData } from "./types";
 
-const GROUPING_DISTANCE_THRESHOLD = 10;
+const GROUPING_DISTANCE_THRESHOLD = 50;
 
 export const calculateLaunchGroups = (launches: LaunchData[]) => {
     const groups: LaunchData[][] = [];

@@ -11,17 +11,21 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "./ui/sheet";
 
 type Props = {
   selectedLaunchGroup: LaunchGroup | null;
   launchGroups: LaunchData[][];
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
 };
 
-const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
-  const [isOpen, setIsOpen] = React.useState(true);
-
+const LaunchDetails = ({
+  selectedLaunchGroup,
+  launchGroups,
+  isOpen,
+  onOpenChange,
+}: Props) => {
   const launchGroup = launchGroups.find(
     (group) => group?.[0]?.id === selectedLaunchGroup?.id
   );
@@ -29,17 +33,7 @@ const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
   if (!launchGroup) return null;
 
   return (
-    <Sheet
-      open={isOpen}
-      onOpenChange={() => setIsOpen((prevState) => !prevState)}
-    >
-      <SheetTrigger asChild>
-        {!isOpen && (
-          <Button variant="outline" className="fixed top-20 right-16">
-            Open
-          </Button>
-        )}
-      </SheetTrigger>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="bg-black bg-opacity-75">
         <SheetHeader>
           <SheetTitle>Launch Details</SheetTitle>
@@ -54,7 +48,8 @@ const LaunchDetails = ({ selectedLaunchGroup, launchGroups }: Props) => {
               <div key={launch.id}>
                 <Link href={launchInfoUrl}>
                   <Image
-                    src={launch.image}
+                    className="w-full h-64"
+                    src={launch.image ?? "rocket.svg"}
                     width={500}
                     height={500}
                     alt="Picture of the author"

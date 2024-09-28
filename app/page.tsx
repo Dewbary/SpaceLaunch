@@ -27,6 +27,7 @@ export default function Home() {
   const [selectedGroup, setSelectedGroup] = React.useState<LaunchGroup | null>(
     null
   );
+  const [detailsIsOpen, setDetailsIsOpen] = React.useState(false);
 
   const { data } = useQuery({
     queryKey: ["launchData", dateRange],
@@ -90,6 +91,7 @@ export default function Home() {
 
   const handleSelectGroup = (group: LaunchGroup) => {
     setSelectedGroup(group);
+    setDetailsIsOpen(true);
   };
 
   return (
@@ -107,6 +109,8 @@ export default function Home() {
         <LaunchDetails
           selectedLaunchGroup={selectedGroup}
           launchGroups={groups}
+          isOpen={detailsIsOpen}
+          onOpenChange={(isOpen) => setDetailsIsOpen(isOpen)}
         />
         <div className="fixed bottom-12 left-8">
           <ModeToggle />
