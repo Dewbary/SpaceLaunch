@@ -1,6 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import Earth from "../components/earth";
 import { ModeToggle } from "@/components/ModeToggle";
 import { getClient } from "@/utils/supabase/client";
 import React from "react";
@@ -11,6 +10,11 @@ import LaunchFilters from "@/components/LaunchFilters";
 import LaunchDetails from "@/components/LaunchDetails";
 import { Menu } from "@/components/ui/menu";
 import { startOfToday, endOfWeek } from "date-fns";
+import dynamic from "next/dynamic";
+
+const Earth = dynamic(() => import("../components/earth"), {
+  ssr: false,
+});
 
 const supabase = getClient();
 

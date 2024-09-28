@@ -65,8 +65,6 @@ const Earth = ({ launchGroups, labelGroups, onSelectGroup }: Props) => {
     onSelectGroup(group as LaunchGroup);
   };
 
-  console.log("launchGroups", launchGroups);
-
   return (
     <div ref={containerRef} className="flex-1 min-w-0">
       {isMounted && (
